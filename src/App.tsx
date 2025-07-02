@@ -182,7 +182,7 @@ function App() {
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://example.com"
+            placeholder="https://gdg.community.dev/events/details/YOUR_AWESOME_EVENT_URL/"
             className="url-input"
             onKeyPress={(e) => e.key === 'Enter' && findEventId()}
           />
