@@ -38,9 +38,10 @@ function App() {
 
     // Try multiple proxy services
     const proxyServices = [
+      '/.netlify/functions/proxy?url=',
       'https://api.allorigins.win/get?url=',
-      'https://cors-anywhere.herokuapp.com/',
-      'https://thingproxy.freeboard.io/fetch/'
+      'https://corsproxy.io/?',
+      'https://cors.eu.org/',
     ]
 
     for (let i = 0; i < proxyServices.length; i++) {
@@ -48,7 +49,7 @@ function App() {
       addDebugLog(`Trying proxy service ${i + 1}: ${proxyUrl}`)
 
       try {
-        const targetUrl = proxyUrl.includes('allorigins') 
+        const targetUrl = proxyUrl.includes('allorigins') || proxyUrl.includes('netlify/functions/proxy')
           ? encodeURIComponent(url)
           : url
 
@@ -72,16 +73,16 @@ function App() {
         let htmlContent: string
 
         // Handle response differently based on proxy service
-        if (proxyUrl.includes('allorigins')) {
+        if (proxyUrl.includes('allorigins') || proxyUrl.includes('netlify/functions/proxy')) {
           const data = await response.json()
-          addDebugLog('JSON parsing successful (allorigins)')
+          addDebugLog('JSON parsing successful (allorigins/netlify)')
           htmlContent = data.contents
-        } else if (proxyUrl.includes('thingproxy')) {
-          // thingproxy returns HTML directly
+        } else if (proxyUrl.includes('corsproxy.io')) {
+          // corsproxy.io returns HTML directly
           htmlContent = await response.text()
-          addDebugLog('HTML fetch successful (thingproxy)')
+          addDebugLog('HTML fetch successful (corsproxy.io)')
         } else {
-          // cors-anywhere etc return HTML directly
+          // cors.eu.org and others return HTML directly
           htmlContent = await response.text()
           addDebugLog('HTML fetch successful')
         }
